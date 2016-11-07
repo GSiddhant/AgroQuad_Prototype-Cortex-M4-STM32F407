@@ -1,5 +1,7 @@
 # AgroQuad_Prototype-Cortex-M4-STM32F407
 
+For a detailed description, refer: https://projectsjalark.wordpress.com/2016/10/24/agroquad/
+
 # Hardware
 The schematics and Layout of the Flight Control Board can be found here: https://drive.google.com/open?id=0B2tfhqDjs2sUbGIwY3VqNENHMXc
 
