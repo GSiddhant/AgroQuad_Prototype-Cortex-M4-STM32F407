@@ -9,7 +9,7 @@
 #define MOTORS_SETUP_CONTROL_H_
 
 #include "AQDelay.h"
-#include "USART_COmmunication.h"
+#include "USART_Communication.h"
 
 void myMotorFL_write(uint32_t deg)
 {
