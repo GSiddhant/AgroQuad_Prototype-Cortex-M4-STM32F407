@@ -8,7 +8,7 @@
 #include "defines.h"
 #include "Motors_Setup_Control.h"
 #include "AQDelay.h"
-#include "USART_COmmunication.h"
+#include "USART_Communication.h"
 #include "UtilMisc.h"
 #include "Sensors_Setup.h"
 
