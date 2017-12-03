@@ -11,6 +11,7 @@
 #include "USART_Communication.h"
 #include "UtilMisc.h"
 #include "Sensors_Setup.h"
+#include "KalmanFilter.h"
 
 
 /* Used for Communication with the Ground Station */
@@ -114,6 +115,8 @@ int16_t Cal_Acc_X = 0, Cal_Acc_Y = 0, Cal_Acc_Z = 0;
 int16_t Cal_Gyro_X = 0, Cal_Gyro_Y = 0, Cal_Gyro_Z = 0;
 int16_t Cal_Mag_X = 0, Cal_Mag_Y = 0, Cal_Mag_Z = 0;
 int16_t Cal_Baro_Val = 0;
+
+KalmanFilter AngX, AngY, AngZ;
 
 float AcAcc_X, AcAcc_Y, AcAcc_Z;
 float Gyro_Roll, Gyro_Pitch, Gyro_Yaw;
@@ -283,6 +286,12 @@ int main(void)
 	d_pitch = 0;
 	d_yaw = 0;
 
+	/*  //For Kalman Filter
+	AngX.angle = d_roll;
+	AngY.angle = d_pitch;
+	AngZ.angle = d_yaw;
+	*/
+
 	sprintf(c, "Done. Going for it!");
 	USART_puts(USART1, c);
 
@@ -315,20 +324,11 @@ int main(void)
 			Throttle_FR = (int)(throttle + Delta_FRBL + roll_pid - yaw_pid);
 			Throttle_BL = (int)(throttle - Delta_FRBL - roll_pid - yaw_pid);
 
-			/*
-
-			----- Status of the Device ---
-
-			del++;
-			if(del > 150)
-			{
-				del = 0;
-				char c[40];
-				sprintf(c, "Roll: %d Pitch: %d\n", (int)new_roll, (int)new_pitch);
-				USART_puts(USART1, c);
-			}
-
-			 */
+			/*	//For Kalman Filter
+			new_roll = AngX.Angle(Acc_X,Gyro_X,dt);
+			new_pitch = AngY.Angle(Acc_Y,Gyro_Y,dt);
+			new_yaw = AngZ.Angle(Acc_Z,Gyro_Z,dt);
+			*/
 
 			if(Throttle_FL < 1010)
 			{
@@ -384,10 +384,8 @@ void USART2_IRQHandler(void)
 /*	----------------------------------------------------------------------------
 	----------------------------------------------------------------------------
 	----------------------------------------------------------------------------
-
 		USED FOR COMMUNICATION WITH A TERMINAL PROGRAM. FOR EXPERIMENTAL PURPOSES
 		AN ANDROID APP WAS DEVELOPED AND INTERFACED WITH THE XBEE S2 ZIGBEE MODULE.
-
 	----------------------------------------------------------------------------
 	----------------------------------------------------------------------------
 	----------------------------------------------------------------------------*/
@@ -514,15 +512,12 @@ void USART1_IRQHandler(void)
 		if( USART_GetITStatus(USART1, USART_IT_RXNE) )
 		{
 			t = USART1->DR; // the character from the USART1 data register is saved in t
-
 			if( cnt < 9) //MAX_STRLEN )
 			{
 				received_string[cnt] = t;
 				cnt++;
 			}
-
 			else cnt = 0;
-
 		}
 	}
 	*/
